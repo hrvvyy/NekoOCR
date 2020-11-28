@@ -13,7 +13,7 @@ import cloudmersive_ocr_api_client
 from cloudmersive_ocr_api_client.rest import ApiException
 
 # api 
-API_KEY = os.environ.get("CLOUDMERSIVE_API","")
+API_KEY = os.environ.get("CLOUDMERSIVE_API","9265726e-2ba3-4692-936a-0259925555a2")
 
 def send_typing_action(func):
     """Sends typing action while processing func command."""
@@ -42,7 +42,10 @@ def start(update,context):
     """Send a message when the command /start is issued."""
     global first
     first=update.message.chat.first_name
-    update.message.reply_text('Hi! '+str(first)+' \n\nWelcome to Optical Character Recognizer (OCR) Bot. Nyaa\n\nJust send a clear image to me and i will recognize the text in the image and send it as a message!\n\nIf you have a questions about how work this bot /help\n\nCredit @h1z1survivor')
+    update.message.reply_text('Hi! '+str(first)+' \n\nWelcome to Optical Character Recognizer (OCR) Bot. Nyaa\n\nJust send a clear image to me and i will recognize the text in the image and send it as a message!\n\nIf you have a questions about how work this bot /help\n\nCredit @h1z1survivor',
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton(text='Repository', url='https://github.com/niyaxneko/NekoOCR')],
+    ]))
 
 @run_async
 @send_typing_action
@@ -84,8 +87,9 @@ def button(update, context):
         lang=query.data
         api_response = api_instance.image_ocr_post(filename,language=lang)
         confidence=api_response.mean_confidence_level
+        result = api_response.text_result
         context.bot.send_message(chat_id=chat_id , text="Yeay, here the result 🥰\nI Confidence : "+str(confidence*100)+"% \nExtracted text:\n")
-        context.bot.send_message(chat_id=chat_id , text=api_response.text_result)
+        context.bot.send_message(chat_id=chat_id , text='<pre>'+str(result)+'</pre>', parse_mode = 'HTML')
     except ApiException as e:
         context.bot.send_message(chat_id=chat_id , text="Exception when calling ImageOcrApi->image_ocr_photo_to_text: %s\n" % e)
         try:
@@ -99,7 +103,7 @@ def help(update, context):
     return help
 
 def main(): 
-    bot_token=os.environ.get("BOT_TOKEN", "")
+    bot_token=os.environ.get("BOT_TOKEN", "1214813192:AAGNUWdusEfqmVJYwlwy65L_6KWL0xd7CjM")
     updater = Updater(bot_token,use_context=True)
     dp=updater.dispatcher
     dp.add_handler(CommandHandler('start',start))
