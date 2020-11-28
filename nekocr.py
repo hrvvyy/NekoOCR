@@ -13,7 +13,7 @@ import cloudmersive_ocr_api_client
 from cloudmersive_ocr_api_client.rest import ApiException
 
 # api 
-API_KEY = os.environ.get("CLOUDMERSIVE_API","9265726e-2ba3-4692-936a-0259925555a2")
+API_KEY = os.environ.get("CLOUDMERSIVE_API","")
 
 def send_typing_action(func):
     """Sends typing action while processing func command."""
@@ -103,7 +103,7 @@ def help(update, context):
     return help
 
 def main(): 
-    bot_token=os.environ.get("BOT_TOKEN", "1214813192:AAGNUWdusEfqmVJYwlwy65L_6KWL0xd7CjM")
+    bot_token=os.environ.get("BOT_TOKEN", "")
     updater = Updater(bot_token,use_context=True)
     dp=updater.dispatcher
     dp.add_handler(CommandHandler('start',start))
